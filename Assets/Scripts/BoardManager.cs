@@ -8,6 +8,8 @@ public class BoardManager : MonoBehaviour
     public static BoardManager Instance { get; set; }
     private bool[,] allowedMoves { get; set; }
 
+    public GameObject canvas;
+
     private const float TILE_SIZE = 1.0f;
     private const float TILE_OFFSET = 0.5f;
 
@@ -30,12 +32,28 @@ public class BoardManager : MonoBehaviour
 
     public int[] EnPassantMove { set; get; }
 
+    public List<int> listPlacer;
+    int max;
+    int rook1;
+    int rook2;
     // Use this for initialization
     void Start()
     {
         Instance = this;
-        SpawnAllChessmans();
+        //SpawnAllChessmans();
+        //SpawnAllRandomChessmans();
         EnPassantMove = new int[2] { -1, -1 };
+    }
+
+    public void Chess()
+    {
+        SpawnAllChessmans();
+        canvas.SetActive(false);
+    }
+    public void onClickChess960()
+    {
+        SpawnAllRandomChessmans();
+        canvas.SetActive(false);
     }
 
     // Update is called once per frame
@@ -270,6 +288,145 @@ public class BoardManager : MonoBehaviour
         }
     }
 
+    private void SpawnAllRandomChessmans()
+    {
+        listPlacer = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 };
+        max = listPlacer.Count;
+
+        activeChessman = new List<GameObject>();
+        Chessmans = new Chessman[8, 8];
+
+        SpawnRooks();
+        SpawnKings();
+        SpawnBishops();
+        SpawnQueens();
+        SpawnKnights();
+
+        // Pawns
+        for (int i = 0; i < 8; i++)
+        {
+            SpawnChessman(5, i, 1, true);
+        }
+        // BlackPawns
+        for (int i = 0; i < 8; i++)
+        {
+            SpawnChessman(11, i, 6, false);
+        }
+    }
+
+    private void SpawnRooks()
+    {
+        var rand = new System.Random();
+        int place = rand.Next(0, max);
+
+        // Rooks
+        SpawnChessman(2, listPlacer[place], 0, true);
+        SpawnChessman(2, listPlacer[place], 7, false);
+        Debug.Log("rook one is at: " + listPlacer[place]);
+        rook1 = place;
+
+        listPlacer.RemoveAt(place);
+        max = listPlacer.Count;
+        bool loop = true;
+        do
+        {
+            int place2 = rand.Next(0, max);
+            if (place2 != (place + 1) && place2 != (place - 1))
+            {
+                SpawnChessman(2, listPlacer[place2], 0, true);
+                SpawnChessman(2, listPlacer[place2], 7, false);
+                Debug.Log("rook two is at: " + listPlacer[place2]);
+                listPlacer.RemoveAt(place2);
+                max = listPlacer.Count;
+                rook2 = place2;
+                loop = false;
+            }
+        } while (loop);
+    }
+
+    private void SpawnKings()
+    {
+        var rand = new System.Random();
+        int place;
+        if(rook1 > rook2)
+        {
+            place = rand.Next(rook2, rook1 - 1);
+            if ((listPlacer[place] > rook1 && listPlacer[place] < rook2) || (listPlacer[place] < rook1 && listPlacer[place] > rook2))
+            {
+                SpawnChessman(0, listPlacer[place], 0, true);
+                SpawnChessman(0, listPlacer[place], 7, false);
+                Debug.Log("king is at is at: " + listPlacer[place]);
+                listPlacer.RemoveAt(place);
+                max = listPlacer.Count;
+
+            }
+        }else if(rook1 < rook2)
+            {
+            place = rand.Next(rook1, rook2 - 1);
+            if ((listPlacer[place] > rook1 && listPlacer[place] < rook2) || (listPlacer[place] < rook1 && listPlacer[place] > rook2))
+            {
+                SpawnChessman(0, listPlacer[place], 0, true);
+                SpawnChessman(0, listPlacer[place], 7, false);
+                Debug.Log("king is at is at: " + listPlacer[place]);
+                listPlacer.RemoveAt(place);
+                max = listPlacer.Count;
+            }
+        }
+    }
+
+    private void SpawnBishops()
+    {
+        var rand = new System.Random();
+        int place = rand.Next(0, max);
+        SpawnChessman(3, listPlacer[place], 0, true);
+        SpawnChessman(3, listPlacer[place], 7, false);
+        Debug.Log("bishop one is at is at: " + listPlacer[place]);
+        listPlacer.RemoveAt(place);
+        max = listPlacer.Count;
+        bool loop = true;
+        do
+        {
+            int place2 = rand.Next(0, max);
+            if ((place % 2 == 0 && place2 % 2 == 1) || (place % 2 == 1 && place2 % 2 == 0))
+            {
+                SpawnChessman(3, listPlacer[place2], 0, true);
+                SpawnChessman(3, listPlacer[place2], 7, false);
+                Debug.Log("bishop two is at is at: " + listPlacer[place2]);
+                listPlacer.RemoveAt(place2);
+                max = listPlacer.Count;
+                loop = false;
+            }
+        } while (loop);
+    }
+
+    private void SpawnQueens()
+    {
+        var rand = new System.Random();
+        int place = rand.Next(0, max);
+        SpawnChessman(1, listPlacer[place], 0, true);
+        SpawnChessman(1, listPlacer[place], 7, false);
+        Debug.Log("queen is at is at: " + listPlacer[place]);
+        listPlacer.RemoveAt(place);
+        max = listPlacer.Count;
+
+    }
+
+    private void SpawnKnights()
+    {
+        var rand = new System.Random();
+        int place = rand.Next(0, max);
+        SpawnChessman(4, listPlacer[place], 0, true);
+        SpawnChessman(4, listPlacer[place], 7, false);
+        Debug.Log("knight one is at is at: " + listPlacer[place]);
+        listPlacer.RemoveAt(place);
+        max = listPlacer.Count;
+
+        place = rand.Next(0, max);
+        SpawnChessman(4, listPlacer[place], 0, true);
+        SpawnChessman(4, listPlacer[place], 7, false);
+        Debug.Log("knight two is at is at: " + listPlacer[place]);
+    }
+
     private void EndGame()
     {
         if (isWhiteTurn)
@@ -284,7 +441,8 @@ public class BoardManager : MonoBehaviour
 
         isWhiteTurn = true;
         BoardHighlights.Instance.HideHighlights();
-        SpawnAllChessmans();
+        //SpawnAllChessmans();
+        //SpawnAllRandomChessmans();
     }
 }
 
