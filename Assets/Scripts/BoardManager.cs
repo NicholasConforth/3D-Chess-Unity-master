@@ -37,12 +37,78 @@ public class BoardManager : MonoBehaviour
     int rook1;
     int rook2;
     // Use this for initialization
+    bool is960 = false;
+    bool isChess = false;
+    bool kingSpawned = false;
+    bool bishopsOnDiffSpace = false;
+    bool rooksAreInPlace = false;
+
     void Start()
     {
         Instance = this;
         //SpawnAllChessmans();
         //SpawnAllRandomChessmans();
         EnPassantMove = new int[2] { -1, -1 };
+    }
+
+    public void testChess()
+    {
+        if (isChess)
+        {
+            Debug.Log("Chess loaded");
+        }
+        if (!isChess)
+        {
+            Debug.Log("Chess not loaded");
+        }
+    }
+
+    public void onClick960()
+    {
+        if(is960)
+        {
+            Debug.Log("960 succesfully loaded");
+
+        }else if(!is960)
+        {
+            Debug.Log("960 is not loaded");
+        }
+    }
+
+    public void onClickKingSpawned()
+    {
+        if(kingSpawned)
+        {
+            Debug.Log("King spawned succesfully");
+        }
+        if(!kingSpawned)
+        {
+            Debug.Log("the rooks somehow spawned next to each other again huh?");
+        }
+    }
+
+    public void onClickBishops()
+    {
+        if(bishopsOnDiffSpace)
+        {
+            Debug.Log("Bishops succefully loaded");
+        }
+        if(!bishopsOnDiffSpace)
+        {
+            Debug.Log("Bishops failed to load on a different space which means the second one does not exist.");
+        }
+    }
+
+    public void onClickRooks()
+    {
+        if(rooksAreInPlace)
+        {
+            Debug.Log("Rooks either loaded succefully or the program is lying to me.");
+        }
+        if(!rooksAreInPlace)
+        {
+            Debug.Log("Rooks did not spawn.");
+        }
     }
 
     public void Chess()
@@ -202,6 +268,7 @@ public class BoardManager : MonoBehaviour
 
     private void SpawnChessman(int index, int x, int y, bool isWhite)
     {
+        
         Vector3 position = GetTileCenter(x, y);
         GameObject go;
 
@@ -231,6 +298,7 @@ public class BoardManager : MonoBehaviour
 
     private void SpawnAllChessmans()
     {
+        isChess = true;
         activeChessman = new List<GameObject>();
         Chessmans = new Chessman[8, 8];
 
@@ -314,6 +382,7 @@ public class BoardManager : MonoBehaviour
         {
             SpawnChessman(11, i, 6, false);
         }
+        is960 = true;
     }
 
     private void SpawnRooks()
@@ -324,7 +393,6 @@ public class BoardManager : MonoBehaviour
         // Rooks
         SpawnChessman(2, listPlacer[place], 0, true);
         SpawnChessman(8, listPlacer[place], 7, false);
-        Debug.Log("rook one is at: " + listPlacer[place]);
         rook1 = place;
 
         listPlacer.RemoveAt(place);
@@ -333,11 +401,11 @@ public class BoardManager : MonoBehaviour
         do
         {
             int place2 = rand.Next(0, max);
-            if (place2 != (place + 1) && place2 != (place - 1))
+            if (place2 != place + 1 && place2 != place - 1)
             {
                 SpawnChessman(2, listPlacer[place2], 0, true);
                 SpawnChessman(8, listPlacer[place2], 7, false);
-                Debug.Log("rook two is at: " + listPlacer[place2]);
+                rooksAreInPlace = true;
                 listPlacer.RemoveAt(place2);
                 max = listPlacer.Count;
                 rook2 = place2;
@@ -357,7 +425,7 @@ public class BoardManager : MonoBehaviour
             {
                 SpawnChessman(0, listPlacer[place], 0, true);
                 SpawnChessman(6, listPlacer[place], 7, false);
-                Debug.Log("king King succesuflly in between rooks");
+                kingSpawned = true;
                 listPlacer.RemoveAt(place);
                 max = listPlacer.Count;
 
@@ -369,7 +437,7 @@ public class BoardManager : MonoBehaviour
             {
                 SpawnChessman(0, listPlacer[place], 0, true);
                 SpawnChessman(6, listPlacer[place], 7, false);
-                Debug.Log("king King succesuflly in between rooks");
+                kingSpawned = true;
                 listPlacer.RemoveAt(place);
                 max = listPlacer.Count;
             }
@@ -382,7 +450,6 @@ public class BoardManager : MonoBehaviour
         int place = rand.Next(0, max);
         SpawnChessman(3, listPlacer[place], 0, true);
         SpawnChessman(9, listPlacer[place], 7, false);
-        Debug.Log("bishop one is at is at: " + listPlacer[place]);
         listPlacer.RemoveAt(place);
         max = listPlacer.Count;
         bool loop = true;
@@ -393,7 +460,7 @@ public class BoardManager : MonoBehaviour
             {
                 SpawnChessman(3, listPlacer[place2], 0, true);
                 SpawnChessman(9, listPlacer[place2], 7, false);
-                Debug.Log("bishop two is at is at: " + listPlacer[place2]);
+                bishopsOnDiffSpace = true;
                 listPlacer.RemoveAt(place2);
                 max = listPlacer.Count;
                 loop = false;
@@ -441,6 +508,11 @@ public class BoardManager : MonoBehaviour
             Destroy(go);
         }
 
+        is960 = false;
+        isChess = false;
+        kingSpawned = false;
+        bishopsOnDiffSpace = false;
+        rooksAreInPlace = false;
         isWhiteTurn = true;
         BoardHighlights.Instance.HideHighlights();
         canvas.SetActive(true);
