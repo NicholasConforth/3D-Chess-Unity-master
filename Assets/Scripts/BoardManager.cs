@@ -302,6 +302,7 @@ public class BoardManager : MonoBehaviour
         SpawnBishops();
         SpawnQueens();
         SpawnKnights();
+        Debug.Log("If the code get's here it is succsefully tried to randomize");
 
         // Pawns
         for (int i = 0; i < 8; i++)
@@ -368,7 +369,7 @@ public class BoardManager : MonoBehaviour
             {
                 SpawnChessman(0, listPlacer[place], 0, true);
                 SpawnChessman(6, listPlacer[place], 7, false);
-                Debug.Log("king is at is at: " + listPlacer[place]);
+                Debug.Log("king King succesuflly in between rooks");
                 listPlacer.RemoveAt(place);
                 max = listPlacer.Count;
             }
