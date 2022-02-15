@@ -290,6 +290,7 @@ public class BoardManager : MonoBehaviour
 
     private void SpawnAllRandomChessmans()
     {
+        Debug.Log("960 succesfully loaded");
         listPlacer = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 };
         max = listPlacer.Count;
 
@@ -321,7 +322,7 @@ public class BoardManager : MonoBehaviour
 
         // Rooks
         SpawnChessman(2, listPlacer[place], 0, true);
-        SpawnChessman(2, listPlacer[place], 7, false);
+        SpawnChessman(8, listPlacer[place], 7, false);
         Debug.Log("rook one is at: " + listPlacer[place]);
         rook1 = place;
 
@@ -334,7 +335,7 @@ public class BoardManager : MonoBehaviour
             if (place2 != (place + 1) && place2 != (place - 1))
             {
                 SpawnChessman(2, listPlacer[place2], 0, true);
-                SpawnChessman(2, listPlacer[place2], 7, false);
+                SpawnChessman(8, listPlacer[place2], 7, false);
                 Debug.Log("rook two is at: " + listPlacer[place2]);
                 listPlacer.RemoveAt(place2);
                 max = listPlacer.Count;
@@ -354,8 +355,8 @@ public class BoardManager : MonoBehaviour
             if ((listPlacer[place] > rook1 && listPlacer[place] < rook2) || (listPlacer[place] < rook1 && listPlacer[place] > rook2))
             {
                 SpawnChessman(0, listPlacer[place], 0, true);
-                SpawnChessman(0, listPlacer[place], 7, false);
-                Debug.Log("king is at is at: " + listPlacer[place]);
+                SpawnChessman(6, listPlacer[place], 7, false);
+                Debug.Log("king King succesuflly in between rooks");
                 listPlacer.RemoveAt(place);
                 max = listPlacer.Count;
 
@@ -366,7 +367,7 @@ public class BoardManager : MonoBehaviour
             if ((listPlacer[place] > rook1 && listPlacer[place] < rook2) || (listPlacer[place] < rook1 && listPlacer[place] > rook2))
             {
                 SpawnChessman(0, listPlacer[place], 0, true);
-                SpawnChessman(0, listPlacer[place], 7, false);
+                SpawnChessman(6, listPlacer[place], 7, false);
                 Debug.Log("king is at is at: " + listPlacer[place]);
                 listPlacer.RemoveAt(place);
                 max = listPlacer.Count;
@@ -379,7 +380,7 @@ public class BoardManager : MonoBehaviour
         var rand = new System.Random();
         int place = rand.Next(0, max);
         SpawnChessman(3, listPlacer[place], 0, true);
-        SpawnChessman(3, listPlacer[place], 7, false);
+        SpawnChessman(9, listPlacer[place], 7, false);
         Debug.Log("bishop one is at is at: " + listPlacer[place]);
         listPlacer.RemoveAt(place);
         max = listPlacer.Count;
@@ -390,7 +391,7 @@ public class BoardManager : MonoBehaviour
             if ((place % 2 == 0 && place2 % 2 == 1) || (place % 2 == 1 && place2 % 2 == 0))
             {
                 SpawnChessman(3, listPlacer[place2], 0, true);
-                SpawnChessman(3, listPlacer[place2], 7, false);
+                SpawnChessman(9, listPlacer[place2], 7, false);
                 Debug.Log("bishop two is at is at: " + listPlacer[place2]);
                 listPlacer.RemoveAt(place2);
                 max = listPlacer.Count;
@@ -404,7 +405,7 @@ public class BoardManager : MonoBehaviour
         var rand = new System.Random();
         int place = rand.Next(0, max);
         SpawnChessman(1, listPlacer[place], 0, true);
-        SpawnChessman(1, listPlacer[place], 7, false);
+        SpawnChessman(7, listPlacer[place], 7, false);
         Debug.Log("queen is at is at: " + listPlacer[place]);
         listPlacer.RemoveAt(place);
         max = listPlacer.Count;
@@ -416,14 +417,14 @@ public class BoardManager : MonoBehaviour
         var rand = new System.Random();
         int place = rand.Next(0, max);
         SpawnChessman(4, listPlacer[place], 0, true);
-        SpawnChessman(4, listPlacer[place], 7, false);
+        SpawnChessman(10, listPlacer[place], 7, false);
         Debug.Log("knight one is at is at: " + listPlacer[place]);
         listPlacer.RemoveAt(place);
         max = listPlacer.Count;
 
         place = rand.Next(0, max);
         SpawnChessman(4, listPlacer[place], 0, true);
-        SpawnChessman(4, listPlacer[place], 7, false);
+        SpawnChessman(10, listPlacer[place], 7, false);
         Debug.Log("knight two is at is at: " + listPlacer[place]);
     }
 
@@ -441,6 +442,7 @@ public class BoardManager : MonoBehaviour
 
         isWhiteTurn = true;
         BoardHighlights.Instance.HideHighlights();
+        canvas.SetActive(true);
         //SpawnAllChessmans();
         //SpawnAllRandomChessmans();
     }
